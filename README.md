@@ -9,7 +9,6 @@ An automated end-to-end (E2E) testing project for the [SauceDemo](https://www.sa
 
 ## 🚀 Features
 
-* **Page Object Model (POM):** Clean and maintainable test architecture separating page elements from test logic.
 * **Cross-Browser Testing:** Automated execution across Chromium, Firefox, and WebKit (Safari).
 * **Parallel Execution:** Fast test runner execution powered by Playwright.
 * **Rich Reporting:** Built-in HTML reports with screenshots and video artifacts on test failure.
