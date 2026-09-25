@@ -52,13 +52,56 @@ test('TC-INV-002 Open product details from inventory', async ({ page }) => {
 });
 
 test('TC-INV-003 Sort products by name', async ({ page }) => {
+  const sort = page.locator('.product_sort_container');
+  const productNames = page.locator('.inventory_item_name');
+  const namesBeforeSorting = await productNames.allTextContents();
+  const namesAscending = [...namesBeforeSorting].sort((firstName, secondName) =>
+    firstName.localeCompare(secondName)
+  );
+  const namesDescending = [...namesAscending].reverse();
 
+  await sort.selectOption('az');
+  await expect(sort).toHaveValue('az');
+  await expect(productNames).toHaveText(namesAscending);
+
+  await sort.selectOption('za');
+  await expect(sort).toHaveValue('za');
+  await expect(productNames).toHaveText(namesDescending);
 });
 
 test('TC-INV-004 Sort products by price', async ({ page }) => {
+  const sort = page.locator('.product_sort_container');
+  const productPrices = page.locator('.inventory_item_price');
+  const pricesBeforeSorting = await productPrices.allTextContents();
+  const pricesAscending = [...pricesBeforeSorting].sort(
+    (firstPrice, secondPrice) =>
+      parseFloat(firstPrice.replace('$', '')) - parseFloat(secondPrice.replace('$', ''))
+  );
+  const pricesDescending = [...pricesAscending].reverse();
 
+  await sort.selectOption('lohi');
+  await expect(sort).toHaveValue('lohi');
+  await expect(productPrices).toHaveText(pricesAscending);
+
+  await sort.selectOption('hilo');
+  await expect(sort).toHaveValue('hilo');
+  await expect(productPrices).toHaveText(pricesDescending);
 });
 
 test('TC-INV-005 Add a product to cart from inventory', async ({ page }) => {
+    const cartItem = page.locator('.cart_item');
+    const itemName = 'Sauce Labs Backpack';
+    const itemDesc = 'carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.';
+    const itemPrice = '$29.99';
+    const product = page.locator('.inventory_item').filter({has: page.getByText(itemName, { exact: true })});
+  
+  await product.getByRole('button', { name: 'Add to cart' }).click();
 
+  await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
+  await page.locator('.shopping_cart_link').click();
+  await expect(page).toHaveURL('/cart.html');
+
+  await expect(cartItem.getByText(itemName, { exact: true })).toBeVisible();
+  await expect(cartItem.getByText(itemDesc, { exaxt: true })).toBeVisible();
+  await expect(cartItem.getByText(itemPrice, { exact: true })).toBeVisible();
 });
