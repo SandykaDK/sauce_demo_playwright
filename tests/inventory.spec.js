@@ -105,3 +105,4 @@ test('TC-INV-005 Add a product to cart from inventory', async ({ page }) => {
   await expect(cartItem.getByText(itemDesc, { exaxt: true })).toBeVisible();
   await expect(cartItem.getByText(itemPrice, { exact: true })).toBeVisible();
 });
+
